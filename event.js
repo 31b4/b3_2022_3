@@ -215,7 +215,7 @@ function EgyenesKeplet(){
     console.log("player: "+ playerX+";"+playerY)
     console.log(x1+';'+x2)
     console.log(y1+';'+y2)
-    //(playerX<x1 && playerY >=y1) || (playerX<x2 && playerY >=y2)
+    //(playerX>=x1 && playerY <x2) || (playerX<=y1 && playerY >y2)
     if (true) {
       var vektor = [y1-x1,y2-x2]
       console.log(vektor)
