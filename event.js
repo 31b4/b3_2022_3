@@ -1,39 +1,39 @@
 var falak_pontjai = [
-    [50,30],
-    [50,650],
-    [1150,30],
-    [530, 650],
-    [620, 650],
-    [1150, 650],
-    [50, 200],
-    [450,200],
-    [50, 425],
-    [450, 425],
-    [450, 650],
-    [450, 500],
-    [450, 345],
-    [530,30],
-    [530,200],
-    [620,425],
-    [1060,425],
-    [530,425]
+  [50,30],
+  [50,650],
+  [1150,30],
+  [530, 650],
+  [620, 650],
+  [1150, 650],
+  [50, 200],
+  [450,200],
+  [50, 425],
+  [450, 425],
+  [450, 650],
+  [450, 500],
+  [450, 345],
+  [530,30],
+  [530,200],
+  [620,425],
+  [1060,425],
+  [530,425]
+]
+var falak = [
+  [0,1],
+  [0,2],
+  [1,3],
+  [5,4],
+  [5,2],
+  [6, 7],
+  [8, 9],
+  [10, 11],
+  [12, 7],
+  [13, 14],
+  [4,15],
+  [15,16],
+  [14,17]
   ]
-  var falak = [
-    [0,1],
-    [0,2],
-    [1,3],
-    [5,4],
-    [5,2],
-    [6, 7],
-    [8, 9],
-    [10, 11],
-    [12, 7],
-    [13, 14],
-    [4,15],
-    [15,16],
-    [14,17]
-  ]
-
+  
   var ajtok_pontjai = [
     [451,200],
     [529,200],
@@ -48,7 +48,7 @@ var falak_pontjai = [
     [1061,425],
     [1149,425]
   ]
-
+  
   var ajtok=[
     [0,1],
     [2,3],
@@ -57,8 +57,8 @@ var falak_pontjai = [
     [8,9],
     [10,11]
   ]
-
-//----------------------------------------
+  
+  //----------------------------------------
 var canvas, ctx,
   playerX = 400,
   playerY = 500,
@@ -70,14 +70,15 @@ var canvas, ctx,
 window.onload = function() {
   canvas = document.getElementById("jatekTer");
   ctx = canvas.getContext("2d");
-  var framesPerSecond = 30;
+  var fps = 60;
   setInterval(function() {
+    document.getElementById("h1").innerHTML=playerX +' ; '+ playerY
     playerMove();
     drawAll();
     document.addEventListener('keydown', keyPressed);
     document.addEventListener('keyup', keyReleased);
     
-  }, 1000 / 60);
+  }, 1000 / fps);
 }
 //------------------------------INPUT-----------------------------------
 var KEY_W = 87,
@@ -131,20 +132,24 @@ function playerMove() {
   
 
   if (keyHeld_Up) {
-    playerSpeedY = -2;
+    playerSpeedY = -1;
     checkEdge()
+    EgyenesKeplet();
   }
   if (keyHeld_Down) {
-    playerSpeedY = 2;
+    playerSpeedY = 1;
     checkEdge()
+    EgyenesKeplet();
   }
   if (keyHeld_Left) {
-    playerSpeedX = -2;
+    playerSpeedX = -1;
     checkEdge()
+    EgyenesKeplet();
   }
   if (keyHeld_Right) {
-    playerSpeedX = 2;
+    playerSpeedX = 1;
     checkEdge()
+    EgyenesKeplet();
   }
 }
 function checkEdge(){// ha kivul van a canvason visszadobja
@@ -167,9 +172,19 @@ function drawAll() {
   colorRect(playerX, playerY, playerW, playerH, 'white');
 
   var c = document.getElementById("jatekTer");
+  var ajto = c.getContext("2d");
+  ajto.beginPath();
+  ajto.lineWidth = 5;
+  ajto.strokeStyle = 'red';
+  for (let i = 0; i < ajtok.length; i++) {
+    ajto.moveTo(ajtok_pontjai[ajtok[i][0]][0],ajtok_pontjai[ajtok[i][0]][1])
+    ajto.lineTo(ajtok_pontjai[ajtok[i][1]][0],ajtok_pontjai[ajtok[i][1]][1])
+    ajto.stroke();
+  }
   var fal = c.getContext("2d");
   fal.beginPath();
   fal.strokeStyle ="black"
+  fal.lineWidth = 5;
   //falak
   for (let i = 0; i < falak.length; i++) {
     fal.moveTo(falak_pontjai[falak[i][0]][0],falak_pontjai[falak[i][0]][1])
@@ -177,14 +192,6 @@ function drawAll() {
     fal.stroke();
   }
   //ajtok
-  var ajto = c.getContext("2d");
-  ajto.beginPath();
-  ajto.strokeStyle = 'red';
-  for (let i = 0; i < ajtok.length; i++) {
-    ajto.moveTo(ajtok_pontjai[ajtok[i][0]][0],ajtok_pontjai[ajtok[i][0]][1])
-    ajto.lineTo(ajtok_pontjai[ajtok[i][1]][0],ajtok_pontjai[ajtok[i][1]][1])
-    ajto.stroke();
-  }
 }
 
 
@@ -197,4 +204,33 @@ function colorText(shownText, xPos, yPos, drawColor) {
   ctx.fillStyle = drawColor;
   ctx.fillText(shownText, xPos, yPos);
 }
+//------------------------------EGYENES KÉPLETE-----------------------------------
 
+function EgyenesKeplet(){
+  for (let i = 0; i < falak.length; i++) {
+    var x1 = falak_pontjai[falak[i][0]][0] //p1
+    var x2= falak_pontjai[falak[i][0]][1] //p1
+    var y1 = falak_pontjai[falak[i][1]][0] //p2
+    var y2= falak_pontjai[falak[i][1]][1] //p2
+    console.log("player: "+ playerX+";"+playerY)
+    console.log(x1+';'+x2)
+    console.log(y1+';'+y2)
+    //(playerX<x1 && playerY >=y1) || (playerX<x2 && playerY >=y2)
+    if (true) {
+      var vektor = [y1-x1,y2-x2]
+      console.log(vektor)
+      var normalVektor = [vektor[1],vektor[0]*(-1)]
+      console.log(normalVektor)
+  
+      var jo_eredmeny = (normalVektor[0]*x1) + (normalVektor[1]*x2)
+      var p_eredmeny = (normalVektor[0]*playerX) + (normalVektor[1]*playerY)
+      console.log(jo_eredmeny)
+      console.log(p_eredmeny)
+      if (jo_eredmeny == p_eredmeny) {
+        alert("utkozes")
+      }
+      
+    }
+
+  }
+}
