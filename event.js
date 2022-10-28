@@ -63,7 +63,7 @@ var canvas, ctx,
   playerX = 400,
   playerY = 500,
   playerW = 20,
-  playerH = 15,
+  playerH = 16,
   playerSpeedX = 0,
   playerSpeedY = 0;
 //------------------------------onload-----------------------------------
@@ -169,7 +169,7 @@ function checkEdge(){// ha kivul van a canvason visszadobja
 //------------------------------DRAVING-----------------------------------
 function drawAll() {
   colorRect(0, 0, canvas.width, canvas.height, 'green');
-  colorRect(playerX, playerY, playerW, playerH, 'white');
+  colorRect(playerX-playerW/2, playerY-playerH/2, playerW, playerH, 'white');
 
   var c = document.getElementById("jatekTer");
   var ajto = c.getContext("2d");
@@ -215,7 +215,13 @@ function EgyenesKeplet(){
     console.log("player: "+ playerX+";"+playerY)
     console.log(x1+';'+x2)
     console.log(y1+';'+y2)
+    if (euklidesziTav(x1,x2,y1,y2) >= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)-2 && euklidesziTav(x1,x2,y1,y2) <= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)+2 ) {
+
+        alert("utkozes")
+      
+    }
     //(playerX>=x1 && playerY <x2) || (playerX<=y1 && playerY >y2)
+    /*
     if (true) {
       var vektor = [y1-x1,y2-x2]
       console.log(vektor)
@@ -226,11 +232,13 @@ function EgyenesKeplet(){
       var p_eredmeny = (normalVektor[0]*playerX) + (normalVektor[1]*playerY)
       console.log(jo_eredmeny)
       console.log(p_eredmeny)
-      if (jo_eredmeny == p_eredmeny) {
-        alert("utkozes")
-      }
       
-    }
+      
+    }*/
 
   }
+}
+function euklidesziTav(x1,x2,y1,y2) {
+ 
+  return Math.sqrt(Math.pow(x1-y1,2)+Math.pow(x2-y2,2))
 }
