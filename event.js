@@ -63,21 +63,25 @@ var canvas, ctx,
   playerX = 400,
   playerY = 500,
   playerW = 20,
-  playerH = 16,
+  playerH = 20,
   playerSpeedX = 0,
   playerSpeedY = 0;
 //------------------------------onload-----------------------------------
+var fps = 60;
+var interval
 window.onload = function() {
   canvas = document.getElementById("jatekTer");
   ctx = canvas.getContext("2d");
-  var fps = 60;
-  setInterval(function() {
+  Interval()
+  
+}
+function Interval() {
+  interval = setInterval(function() {
     document.getElementById("h1").innerHTML=playerX +' ; '+ playerY
     playerMove();
     drawAll();
     document.addEventListener('keydown', keyPressed);
     document.addEventListener('keyup', keyReleased);
-    
   }, 1000 / fps);
 }
 //------------------------------INPUT-----------------------------------
@@ -85,6 +89,7 @@ var KEY_W = 87,
  KEY_A = 65,
  KEY_S = 83,
  KEY_D = 68,
+ KEY_SHIFT = 16,
 
  keyHeld_Down = false,
  keyHeld_Up = false,
@@ -104,6 +109,11 @@ var KEY_W = 87,
   if (evt.keyCode == KEY_S) {
     keyHeld_Down = true;
   }
+  if (evt.keyCode == KEY_SHIFT) {
+    fps = 120
+    clearInterval(interval)
+    Interval()
+  }
 
   evt.preventDefault();
 }
@@ -111,18 +121,27 @@ function keyReleased(evt) {
   if (evt.keyCode == KEY_A) {
     keyHeld_Left = false;
     playerSpeedX = 0;
+    playerSpeedY = 0;
   }
   if (evt.keyCode == KEY_D) {
     keyHeld_Right = false;
     playerSpeedX = 0;
+    playerSpeedY = 0;
   }
   if (evt.keyCode == KEY_W) {
     keyHeld_Up = false;
     playerSpeedY = 0;
+    playerSpeedX = 0;
   }
   if (evt.keyCode == KEY_S) {
     keyHeld_Down = false;
     playerSpeedY = 0;
+    playerSpeedX = 0;
+  }
+  if (evt.keyCode == KEY_SHIFT) {
+    fps = 60
+    clearInterval(interval)
+    Interval()
   }
 }
 //------------------------------MOVING-----------------------------------
@@ -130,27 +149,45 @@ function playerMove() {
   playerX += playerSpeedX;
   playerY += playerSpeedY;
   
-
-  if (keyHeld_Up) {
-    playerSpeedY = -1;
-    checkEdge()
-    EgyenesKeplet();
+  if (true) {
+    if (keyHeld_Up) {
+      playerSpeedY = -1;
+      checkEdge()
+      if (FalUtkozes()) {
+        playerY -= playerSpeedY;
+        playerSpeedY =0;
+      }
+      
+    }
+    else if (keyHeld_Down) {
+      playerSpeedY = 1;
+      checkEdge()
+      if (FalUtkozes()) {
+        playerY -= playerSpeedY;
+        playerSpeedY =0;
+      }
+      
+    }
+    if (keyHeld_Left) {
+      playerSpeedX = -1;
+      checkEdge()
+      if (FalUtkozes()) {
+        playerX -= playerSpeedX;
+        playerSpeedX = 0;
+      }
+      
+    }
+    else if (keyHeld_Right) {
+      playerSpeedX = 1;
+      checkEdge()
+      if (FalUtkozes()) {
+        playerX -= playerSpeedX;
+        playerSpeedX = 0;
+      }
+      
+    }
   }
-  if (keyHeld_Down) {
-    playerSpeedY = 1;
-    checkEdge()
-    EgyenesKeplet();
-  }
-  if (keyHeld_Left) {
-    playerSpeedX = -1;
-    checkEdge()
-    EgyenesKeplet();
-  }
-  if (keyHeld_Right) {
-    playerSpeedX = 1;
-    checkEdge()
-    EgyenesKeplet();
-  }
+  
 }
 function checkEdge(){// ha kivul van a canvason visszadobja
   if (playerY <= 0) {
@@ -184,7 +221,7 @@ function drawAll() {
   var fal = c.getContext("2d");
   fal.beginPath();
   fal.strokeStyle ="black"
-  fal.lineWidth = 5;
+  fal.lineWidth = 1;
   //falak
   for (let i = 0; i < falak.length; i++) {
     fal.moveTo(falak_pontjai[falak[i][0]][0],falak_pontjai[falak[i][0]][1])
@@ -206,18 +243,19 @@ function colorText(shownText, xPos, yPos, drawColor) {
 }
 //------------------------------EGYENES KÉPLETE-----------------------------------
 
-function EgyenesKeplet(){
+function FalUtkozes(){
   for (let i = 0; i < falak.length; i++) {
     var x1 = falak_pontjai[falak[i][0]][0] //p1
     var x2= falak_pontjai[falak[i][0]][1] //p1
     var y1 = falak_pontjai[falak[i][1]][0] //p2
     var y2= falak_pontjai[falak[i][1]][1] //p2
-    console.log("player: "+ playerX+";"+playerY)
-    console.log(x1+';'+x2)
-    console.log(y1+';'+y2)
-    if (euklidesziTav(x1,x2,y1,y2) >= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)-2 && euklidesziTav(x1,x2,y1,y2) <= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)+2 ) {
+   // console.log("player: "+ playerX+";"+playerY)
+   // console.log(x1+';'+x2)
+   // console.log(y1+';'+y2)
+    if (euklidesziTav(x1,x2,y1,y2) >= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)-0 && euklidesziTav(x1,x2,y1,y2) <= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)+0) {
+      
 
-        alert("utkozes")
+      return true
       
     }
     //(playerX>=x1 && playerY <x2) || (playerX<=y1 && playerY >y2)
@@ -237,8 +275,8 @@ function EgyenesKeplet(){
     }*/
 
   }
+  return false
 }
 function euklidesziTav(x1,x2,y1,y2) {
- 
   return Math.sqrt(Math.pow(x1-y1,2)+Math.pow(x2-y2,2))
 }
