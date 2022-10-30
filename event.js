@@ -64,8 +64,13 @@ var canvas, ctx,
   playerY = 500,
   playerW = 20,
   playerH = 20,
+  playerX2 = playerX+playerW,
+  playerY2 = playerY+playerH,
   playerSpeedX = 0,
   playerSpeedY = 0;
+var hang = new Image();
+hang.src = 'img/mic.png';
+
 //------------------------------onload-----------------------------------
 var fps = 60;
 var interval
@@ -78,8 +83,9 @@ window.onload = function() {
 function Interval() {
   interval = setInterval(function() {
     document.getElementById("h1").innerHTML=playerX +' ; '+ playerY
-    playerMove();
     drawAll();
+    playerMove();
+    
     document.addEventListener('keydown', keyPressed);
     document.addEventListener('keyup', keyReleased);
   }, 1000 / fps);
@@ -90,11 +96,14 @@ var KEY_W = 87,
  KEY_S = 83,
  KEY_D = 68,
  KEY_SHIFT = 16,
+ KEY_SPACE = 32,
 
  keyHeld_Down = false,
  keyHeld_Up = false,
  keyHeld_Left = false,
- keyHeld_Right = false;
+ keyHeld_Right = false,
+ keyHeld_Shift = false,
+ keyHeld_Space = false;
 
  function keyPressed(evt) {
   if (evt.keyCode == KEY_A) {
@@ -111,6 +120,13 @@ var KEY_W = 87,
   }
   if (evt.keyCode == KEY_SHIFT) {
     fps = 120
+    keyHeld_Shift = true
+    clearInterval(interval)
+    Interval()
+  }
+  if (evt.keyCode == KEY_SPACE) {
+    fps = 40
+    keyHeld_Space = true
     clearInterval(interval)
     Interval()
   }
@@ -140,54 +156,101 @@ function keyReleased(evt) {
   }
   if (evt.keyCode == KEY_SHIFT) {
     fps = 60
+    keyHeld_Shift = false
     clearInterval(interval)
     Interval()
   }
+  if (evt.keyCode == KEY_SPACE) {
+    fps = 60
+    keyHeld_Space = false
+    clearInterval(interval)
+    Interval()
+  }
+  
 }
 //------------------------------MOVING-----------------------------------
+function HangErzekeles() {
+  if (keyHeld_Shift) {
+    if (euklidesziTav(620,270,playerX+playerW/2,playerY+playerH/2)<=230) {
+      ctx.beginPath();
+      ctx.strokeStyle="yellow"
+      ctx.lineWidth = 3;
+      ctx.arc(600+20, 250+20, 230, 0, 2 * Math.PI);
+      ctx.stroke()
+    }  
+  }
+  else if ( keyHeld_Space){
+    if (euklidesziTav(620,270,playerX+playerW/2,playerY+playerH/2)<=100) {
+      ctx.beginPath();
+      ctx.strokeStyle="yellow"
+      ctx.lineWidth = 3;
+      ctx.arc(600+20, 250+20, 100, 0, 2 * Math.PI);
+      ctx.stroke()
+    } 
+  }
+  else{
+    if (euklidesziTav(620,270,playerX+playerW/2,playerY+playerH/2)<=150) {
+      ctx.beginPath();
+      ctx.strokeStyle="yellow"
+      ctx.lineWidth = 3;
+      ctx.arc(600+20, 250+20, 150, 0, 2 * Math.PI);
+      ctx.stroke()
+    } 
+  }
+}
 function playerMove() {
   playerX += playerSpeedX;
   playerY += playerSpeedY;
-  
-  if (true) {
-    if (keyHeld_Up) {
+  playerX2 += playerSpeedX;
+  playerY2 += playerSpeedY;
+    
+    if (keyHeld_Up && !keyHeld_Down) {
+      HangErzekeles()
       playerSpeedY = -1;
       checkEdge()
-      if (FalUtkozes()) {
+      if (Utkozes(falak,falak_pontjai)[0]) {
         playerY -= playerSpeedY;
+        playerY2 -= playerSpeedY;
         playerSpeedY =0;
       }
       
     }
-    else if (keyHeld_Down) {
+    else if (keyHeld_Down && !keyHeld_Up) {
+      HangErzekeles()
       playerSpeedY = 1;
       checkEdge()
-      if (FalUtkozes()) {
+      if (Utkozes(falak,falak_pontjai)[0]) {
         playerY -= playerSpeedY;
+        playerY2 -= playerSpeedY;
         playerSpeedY =0;
       }
       
     }
     if (keyHeld_Left) {
+      HangErzekeles()
       playerSpeedX = -1;
       checkEdge()
-      if (FalUtkozes()) {
+      if (Utkozes(falak,falak_pontjai)[0]) {
         playerX -= playerSpeedX;
+        playerX2 -= playerSpeedX;
         playerSpeedX = 0;
       }
       
     }
     else if (keyHeld_Right) {
+      HangErzekeles()
       playerSpeedX = 1;
       checkEdge()
-      if (FalUtkozes()) {
+      if (Utkozes(falak,falak_pontjai)[0]) {
         playerX -= playerSpeedX;
+        playerX2 -= playerSpeedX;
         playerSpeedX = 0;
       }
       
     }
-  }
   
+  //console.log("P1"+playerX+';'+playerY + "P2"+playerX2+';'+playerY2)
+
 }
 function checkEdge(){// ha kivul van a canvason visszadobja
   if (playerY <= 0) {
@@ -206,7 +269,9 @@ function checkEdge(){// ha kivul van a canvason visszadobja
 //------------------------------DRAVING-----------------------------------
 function drawAll() {
   colorRect(0, 0, canvas.width, canvas.height, 'green');
-  colorRect(playerX-playerW/2, playerY-playerH/2, playerW, playerH, 'white');
+  colorRect(playerX, playerY, playerW, playerH, 'white');
+
+  
 
   var c = document.getElementById("jatekTer");
   var ajto = c.getContext("2d");
@@ -229,38 +294,90 @@ function drawAll() {
     fal.stroke();
   }
   //ajtok
+  //hang szenzor 620,270
+  
+  ctx.drawImage(hang, 600, 250,40,40)
+  ctx.beginPath();
+  ctx.strokeStyle="red"
+  ctx.lineWidth = 3;
+  ctx.arc(600+20, 250+20, 100, 0, 2 * Math.PI);
+  ctx.stroke()
+  ctx.beginPath();
+  ctx.strokeStyle="red"
+  ctx.lineWidth = 3;
+  ctx.arc(600+20, 250+20, 150, 0, 2 * Math.PI);
+  ctx.stroke()
+  ctx.beginPath();
+  ctx.strokeStyle="red"
+  ctx.lineWidth = 3;
+  ctx.arc(600+20, 250+20, 230, 0, 2 * Math.PI);
+  ctx.stroke()
+  //erzekelo ajtok
+  var xy = Utkozes(ajtok, ajtok_pontjai)
+  if(xy[0]){//true / false
+      xy[1]
+      let x1 = xy[1][0]
+      let x2 = xy[1][1]
+      let y1 = xy[1][2]
+      let y2 = xy[1][3]
+      colorChange(x1,x2,y1,y2,"green")
+  
+  }
 }
 
 
 function colorRect(leftX, topY, width, height, drawColor) {
+  ctx.beginPath()
   ctx.fillStyle = drawColor;
   ctx.fillRect(leftX, topY, width, height);
 }
-
+function colorChange(x1,x2,y1,y2,color){
+  var c = document.getElementById("jatekTer");
+  var atszin = c.getContext("2d");
+  atszin.beginPath()
+  atszin.moveTo(x1,x2)
+  atszin.lineTo(y1,y2)
+  atszin.lineWidth = 5;
+  atszin.strokeStyle = 'yellow'
+  atszin.stroke()
+}
 function colorText(shownText, xPos, yPos, drawColor) {
+  ctx.beginPath()
   ctx.fillStyle = drawColor;
   ctx.fillText(shownText, xPos, yPos);
 }
 //------------------------------EGYENES KÉPLETE-----------------------------------
 
-function FalUtkozes(){
-  for (let i = 0; i < falak.length; i++) {
-    var x1 = falak_pontjai[falak[i][0]][0] //p1
-    var x2= falak_pontjai[falak[i][0]][1] //p1
-    var y1 = falak_pontjai[falak[i][1]][0] //p2
-    var y2= falak_pontjai[falak[i][1]][1] //p2
-   // console.log("player: "+ playerX+";"+playerY)
-   // console.log(x1+';'+x2)
-   // console.log(y1+';'+y2)
-    if (euklidesziTav(x1,x2,y1,y2) >= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)-0 && euklidesziTav(x1,x2,y1,y2) <= euklidesziTav(playerX,playerY,x1,x2)+euklidesziTav(playerX,playerY,y1,y2)+0) {
-      
+function Utkozes(elem,elem_pontjai){
+  for (let i = 0; i < elem.length; i++) {
+    var x1 = elem_pontjai[elem[i][0]][0] //p1
+    var x2= elem_pontjai[elem[i][0]][1] //p1
+    var y1 = elem_pontjai[elem[i][1]][0] //p2
+    var y2= elem_pontjai[elem[i][1]][1] //p2
 
-      return true
-      
+    //-----hatekonysag javitasat igenyli
+    for (let i = playerX; i < playerX+ playerW; i++) {
+      for (let j = playerY; j < playerY+ playerH; j++) {
+        if (euklidesziTav(x1,x2,y1,y2) >= euklidesziTav(i,j,x1,x2)+euklidesziTav(i,j,y1,y2)-0 && euklidesziTav(x1,x2,y1,y2) <= euklidesziTav(i,j,x1,x2)+euklidesziTav(i,j,y1,y2)+0) {
+          return [true,[x1,x2,y1,y2]]
+        } 
+      }
     }
-    //(playerX>=x1 && playerY <x2) || (playerX<=y1 && playerY >y2)
-    /*
-    if (true) {
+    
+  }
+  return false
+}
+function euklidesziTav(x1,x2,y1,y2) {
+  return Math.sqrt(Math.pow(x1-y1,2)+Math.pow(x2-y2,2))
+}
+
+
+
+
+/*
+----------egyenes egyelnet
+
+if (true) {
       var vektor = [y1-x1,y2-x2]
       console.log(vektor)
       var normalVektor = [vektor[1],vektor[0]*(-1)]
@@ -271,12 +388,5 @@ function FalUtkozes(){
       console.log(jo_eredmeny)
       console.log(p_eredmeny)
       
-      
-    }*/
 
-  }
-  return false
-}
-function euklidesziTav(x1,x2,y1,y2) {
-  return Math.sqrt(Math.pow(x1-y1,2)+Math.pow(x2-y2,2))
-}
+*/
