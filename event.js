@@ -58,6 +58,17 @@ var falak = [
     [10,11]
   ]
   
+  var ablakok = [
+    [50,80],
+    [50,130],
+    [800,30],
+    [870,30],
+    [1150,530],
+    [1150,600],
+    [120,650],
+    [200,650]
+
+  ]
   //----------------------------------------
 var canvas, ctx,
   playerX = 400,
@@ -118,13 +129,13 @@ var KEY_W = 87,
   if (evt.keyCode == KEY_S) {
     keyHeld_Down = true;
   }
-  if (evt.keyCode == KEY_SHIFT) {
+  if (evt.keyCode == KEY_SHIFT && !keyHeld_Space) {
     fps = 120
     keyHeld_Shift = true
     clearInterval(interval)
     Interval()
   }
-  if (evt.keyCode == KEY_SPACE) {
+  if (evt.keyCode == KEY_SPACE && !keyHeld_Shift) {
     fps = 40
     keyHeld_Space = true
     clearInterval(interval)
@@ -201,8 +212,7 @@ function HangErzekeles() {
 function playerMove() {
   playerX += playerSpeedX;
   playerY += playerSpeedY;
-  playerX2 += playerSpeedX;
-  playerY2 += playerSpeedY;
+
     
     if (keyHeld_Up && !keyHeld_Down) {
       HangErzekeles()
@@ -210,7 +220,6 @@ function playerMove() {
       checkEdge()
       if (Utkozes(falak,falak_pontjai)[0]) {
         playerY -= playerSpeedY;
-        playerY2 -= playerSpeedY;
         playerSpeedY =0;
       }
       
@@ -221,29 +230,26 @@ function playerMove() {
       checkEdge()
       if (Utkozes(falak,falak_pontjai)[0]) {
         playerY -= playerSpeedY;
-        playerY2 -= playerSpeedY;
         playerSpeedY =0;
       }
       
     }
-    if (keyHeld_Left) {
+    if (keyHeld_Left && !keyHeld_Right) {
       HangErzekeles()
       playerSpeedX = -1;
       checkEdge()
       if (Utkozes(falak,falak_pontjai)[0]) {
         playerX -= playerSpeedX;
-        playerX2 -= playerSpeedX;
         playerSpeedX = 0;
       }
       
     }
-    else if (keyHeld_Right) {
+    else if (keyHeld_Right  && !keyHeld_Left) {
       HangErzekeles()
       playerSpeedX = 1;
       checkEdge()
       if (Utkozes(falak,falak_pontjai)[0]) {
         playerX -= playerSpeedX;
-        playerX2 -= playerSpeedX;
         playerSpeedX = 0;
       }
       
@@ -294,6 +300,16 @@ function drawAll() {
     fal.stroke();
   }
   //ajtok
+  //ablakok
+  var ablak = c.getContext("2d");
+  ablak.beginPath();
+  ablak.strokeStyle ="lightblue"
+  ablak.lineWidth = 2;
+  for (let i = 0; i < ablakok.length; i+=2) {
+    ablak.moveTo(ablakok[i][0],ablakok[i][1])
+    ablak.lineTo(ablakok[i+1][0],ablakok[i+1][1])
+    ablak.stroke()
+  }
   //hang szenzor 620,270
   
   ctx.drawImage(hang, 600, 250,40,40)
