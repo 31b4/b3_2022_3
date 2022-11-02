@@ -82,7 +82,7 @@ var canvas, ctx,
 var hang = new Image();
 hang.src = 'img/mic.png';
 var mozgas = new Image();
-mozgas.src = 'img/motion.png'
+mozgas.src = 'img/motion.png';
 
 //------------------------------onload-----------------------------------
 var fps = 60;
@@ -231,22 +231,6 @@ function MozgasErzekeles() {
           }
         } 
     }
-    /*
-    for (let k = playerX; k < playerX+ playerW; k++) {
-      let y1 = mePontjai[i][0]
-      let y2 = mePontjai[i][1]
-      if (euklidesziTav(x1,x2,y1,y2) >= euklidesziTav(k,playerY+playerH,x1,x2)+euklidesziTav(k,playerY+playerH,y1,y2) ) {
-        var mozg = canvas.getContext("2d");
-        mozg.beginPath();
-        mozg.lineWidth = 1;
-        mozg.strokeStyle = 'yellow';
-        for (let i = 0; i < mePontjai.length; i+=1) {
-          mozg.moveTo(me_pontja[0],me_pontja[1])
-          mozg.lineTo(mePontjai[i][0], mePontjai[i][1])
-          mozg.stroke()
-        }
-      } 
-    }*/
   }
 }
 
@@ -254,7 +238,6 @@ function playerMove() {
     playerX += playerSpeedX;
     playerY += playerSpeedY;
   
-    
     if (keyHeld_Up && !keyHeld_Down) {
       HangErzekeles();
       MozgasErzekeles();
@@ -264,7 +247,6 @@ function playerMove() {
         playerY -= playerSpeedY;
         playerSpeedY =0;
       }
-      
     }
     else if (keyHeld_Down && !keyHeld_Up) {
       HangErzekeles();
@@ -289,7 +271,6 @@ function playerMove() {
         playerX -= playerSpeedX;
         playerSpeedX = 0;
       }
-      
     }
     else if (keyHeld_Right  && !keyHeld_Left) {
       HangErzekeles();
@@ -305,9 +286,6 @@ function playerMove() {
       playerX -= playerSpeedX;
       playerSpeedX = 0;
     }
-  
-  //console.log("P1"+playerX+';'+playerY + "P2"+playerX2+';'+playerY2)
-
 }
 function checkEdge(){// ha kivul van a canvason visszadobja
   if (playerY <= 0) {
@@ -326,11 +304,7 @@ function checkEdge(){// ha kivul van a canvason visszadobja
 //------------------------------DRAVING-----------------------------------
 function drawAll() {
   colorRect(0, 0, canvas.width, canvas.height, 'green');
-  
-  
   var c = document.getElementById("jatekTer");
-  
-
   var ajto = c.getContext("2d");
   ajto.beginPath();
   ajto.lineWidth = 5;
@@ -354,7 +328,7 @@ function drawAll() {
   //ablakok
   var ablak = c.getContext("2d");
   ablak.beginPath();
-  ablak.strokeStyle ="lightblue"
+  ablak.strokeStyle ="lightblue";
   ablak.lineWidth = 2;
   for (let i = 0; i < ablakok.length; i+=2) {
     ablak.moveTo(ablakok[i][0],ablakok[i][1]);
@@ -391,7 +365,7 @@ function drawAll() {
       colorChange(x1,x2,y1,y2,"yellow");
   
   }
-  //mozgerz
+  //mozgerz (HATEKONYSAG NOVELES ERDEKEBEN KIVETTUK)
   /*
   var mozg = c.getContext("2d");
   mozg.beginPath();
@@ -402,11 +376,9 @@ function drawAll() {
     mozg.lineTo(mePontjai[i][0], mePontjai[i][1]);
     mozg.stroke();
   }*/
-  //player
-  colorRect(playerX, playerY, playerW, playerH, 'white');
+
+  colorRect(playerX, playerY, playerW, playerH, 'white'); //player
 }
-
-
 function colorRect(leftX, topY, width, height, drawColor) {
   ctx.beginPath();
   ctx.fillStyle = drawColor;
@@ -435,16 +407,13 @@ function Utkozes(elem,elem_pontjai){
     var x2= elem_pontjai[elem[i][0]][1]; //p1
     var y1 = elem_pontjai[elem[i][1]][0]; //p2
     var y2= elem_pontjai[elem[i][1]][1];//p2
-
-    //-----hatekonysag javitasat igenyli
     for (let i = playerX; i < playerX+ playerW; i++) {
       for (let j = playerY; j < playerY+ playerH; j++) {
         if (euklidesziTav(x1,x2,y1,y2) >= euklidesziTav(i,j,x1,x2)+euklidesziTav(i,j,y1,y2) && euklidesziTav(x1,x2,y1,y2) <= euklidesziTav(i,j,x1,x2)+euklidesziTav(i,j,y1,y2)) {
           return [true,[x1,x2,y1,y2]];
         } 
       }
-    }
-    
+    } 
   }
   return false;
 }
@@ -452,9 +421,6 @@ function euklidesziTav(x1,x2,y1,y2) {
   return Math.sqrt(Math.pow(x1-y1,2)+Math.pow(x2-y2,2));
 }
 
-
-
-//var me_pontja = [463,634]
 var me_pontja = [60,640];
 var mePontjai=[];
 function MozgasErzekeloLetrehozas() {
@@ -468,7 +434,7 @@ function Abc(n,m,k,falak_e){
   for (let i = n; i <= m; i+=10) {
     let x2 = i; //A
     let y2 = k;
-    if (k == 1150) {//----szar---------------------------
+    if (k == 1150) {
       x2 = k;
       y2 = i;
     }
@@ -485,24 +451,16 @@ function Abc(n,m,k,falak_e){
           let B = [falak_pontjai[falak[j][1]][0],falak_pontjai[falak[j][1]][1]]; // meddig x,y
           if (euklidesziTav(A[0],A[1],B[0],B[1]) >= euklidesziTav(mecc[0],mecc[1],A[0],A[1])+euklidesziTav(mecc[0],mecc[1],B[0],B[1])-5 && euklidesziTav(A[0],A[1],B[0],B[1]) <= euklidesziTav(mecc[0],mecc[1],A[0],A[1])+euklidesziTav(mecc[0],mecc[1],B[0],B[1])+5) {
             sv.push(mecc);
-            sv2.push(euklidesziTav(mecc[0],mecc[1],x1,y1));
-            
+            sv2.push(euklidesziTav(mecc[0],mecc[1],x1,y1));            
           }
         }
       }
     }
-
     var abc2 = sv[sv2.indexOf(Math.min(...sv2))];
     if (abc2 != undefined) {
       mePontjai.push([Math.round(abc2[0]),Math.round(abc2[1])]);
     }
-
-    //sv2.push()
   }
-    //console.log(sv)
-    //console.log(abc2)
-    
-  
 }
 function EgyenletRendszer(abc2,abc1) {
   let y = (abc2[2]*abc1[0]-abc2[0]*abc1[2]) / (abc1[0]*abc2[1] - abc2[0]*abc1[1]);
@@ -512,6 +470,7 @@ function EgyenletRendszer(abc2,abc1) {
   }
   return -1;
 }
+
 function FalakEgyenesEgyenlete() {
   var egyenesek = [];
   for (let i = 0; i < falak.length; i++) {
@@ -528,14 +487,14 @@ function FalakEgyenesEgyenlete() {
 function IranyVektor(x1,y1,x2,y2) {
   return [x1-x2,y1-y2];
 }
+
 function NormalVektor(iv) {
   return [iv[1],iv[0]*(-1)];
 }
+
 function EgyenesEgyenlete(nv,A){
   var a = nv[0];
   var b = nv[1];
   var c = a*A[0] + b*A[1];
   return [a,b,c];
 }
-
-
